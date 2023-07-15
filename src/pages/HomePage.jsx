@@ -1,10 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchPhotos, addComment } from "../store/photosSlice";
-import SingleItem from "../cmps/SingleItem2";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Photo from "../cmps/Photo";
-import Chat from "../cmps/Chat";
 import "../style.css";
+import PhotoDetails from "../cmps/PhotoDetails";
 
 export default function HomePage() {
   const [photos, setPhotos] = useState([]);
@@ -12,6 +9,8 @@ export default function HomePage() {
   const [startGame, setStartGame] = useState(false);
   const inputRef = useRef(null);
   const [searchedPhotos, setSearchedPhotos] = useState([]);
+  const [selectedPhoto, setSelectedPhoto] = useState(null)
+
 
   function fetchData() {
     fetch("http://localhost:3000/api/photo")
@@ -52,26 +51,18 @@ export default function HomePage() {
   }, []);
 
 
-  // useEffect(() => {
-  //   const handleInput = () => {
-  //     if (inputRef.current.value === '') {
-  //       console.log('erase')
-       
-  //     }
-  //   };
-
-  //   inputRef.current.addEventListener('input', handleInput);
-
-  //   return () => {
-  //     inputRef.current.removeEventListener('input', handleInput);
-  //   };
-  // }, [searchedPhotos]);
-
   return (
+    
     <div className="home-container">
-      {photos.length > 0 && (
+
+{selectedPhoto && ( <>
+  <button style={{border: '3px solid black'}} onClick={()=>setSelectedPhoto(null)}>Back To Gallery</button > <PhotoDetails item={selectedPhoto}/>
+  </>)}
+
+
+      {(photos.length > 0 && !selectedPhoto) && (
         <div>
-          <label>search for photo</label>
+          <label>search for photo's name or artist name</label>
           <input ref={inputRef} />
           <button onClick={() => useInputValue(inputRef)}>START</button>
         </div>
@@ -83,20 +74,30 @@ export default function HomePage() {
         </div>
       )}
 
-      {photos.length && !searchedPhotos.length ? (
+      {(photos.length && !searchedPhotos.length && !selectedPhoto) && (
         <div className="listContainer">
           {photos.map((photo) => {
-            return <Photo item={photo} alt={photo.name} />;
-          })}
-        </div>
-      ) : (
-        <div className="listContainer">
-          <button alt={'see all items'} onClick={()=>setSearchText(()=>setSearchedPhotos(()=>[]))}>See all items</button>
-          {searchedPhotos.map((photo) => {
-            return <Photo item={photo} alt={photo.name} />;
+            return <div onClick={()=> setSelectedPhoto(photo)}>
+              <Photo item={photo} alt={photo.name} key={photo._id}/>;
+            </div>
           })}
         </div>
       )}
+
+      {(photos.length && searchedPhotos.length > 0 && !selectedPhoto) && (
+
+<div className="listContainer">
+          <button alt={'see all items'} onClick={()=>setSearchText(()=>setSearchedPhotos(()=>[]))}>See all items</button>
+          {searchedPhotos.map((photo) => {
+            return <div  onClick={()=> setSelectedPhoto(photo)}>
+              <Photo item={photo} alt={photo.name} key={photo._id}/>;
+              </div>
+          })}
+        </div>
+      )}
+
+
+
 
       {/* { {!photos || !photos.length ? (
         <div className="loading">
