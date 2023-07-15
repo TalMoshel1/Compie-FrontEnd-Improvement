@@ -101,6 +101,7 @@
 
   .item-name {
     font-size: 4rem;
+    text-align: center;
   }
   .item-artistName {
     font-size: 3rem;
@@ -123,6 +124,51 @@
     justify-content: 'flex-end'
   }
 
+  .photo-chat-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .chat {
+    /* margin-bottom: 20px; */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .comment {
+    margin-bottom: 10px;
+  }
+  
+  .user {
+    font-weight: bold;
+  }
+  
+  .add-comment {
+    display: flex;
+    margin-top: 10px;
+  }
+  
+  .add-comment input {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .add-comment button {
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .no-comments {
+    font-style: italic;
+    color: gray;
+  }
   /* @media (min-width: 21.83375rem) {
     .loading {
       height: calc(100vh - 18.939375rem);
@@ -144,3 +190,13 @@
 
     }
   } */
+
+
+  @media (max-width: 21.83375rem) {
+    .photo-chat-container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
