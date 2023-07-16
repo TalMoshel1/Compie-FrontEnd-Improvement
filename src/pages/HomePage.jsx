@@ -9,8 +9,7 @@ export default function HomePage() {
   const [startGame, setStartGame] = useState(false);
   const inputRef = useRef(null);
   const [searchedPhotos, setSearchedPhotos] = useState([]);
-  const [selectedPhoto, setSelectedPhoto] = useState(null)
-
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   function fetchData() {
     fetch("http://localhost:3000/api/photo")
@@ -26,16 +25,19 @@ export default function HomePage() {
         });
       })
       .catch((error) => {
-        console.error(error);
-      });
+return      });
   }
 
   function useInputValue(inputRef) {
     if (photos.length > 0) {
       const filteredPhotos = photos.filter((photo) => {
         return (
-          photo.artistName.toLowerCase().includes(inputRef.current.value.toLowerCase()) ||
-          photo.name.toLowerCase().includes(inputRef.current.value.toLowerCase())
+          photo.artistName
+            .toLowerCase()
+            .includes(inputRef.current.value.toLowerCase()) ||
+          photo.name
+            .toLowerCase()
+            .includes(inputRef.current.value.toLowerCase())
         );
       });
 
@@ -49,21 +51,32 @@ export default function HomePage() {
     fetchData();
   }, []);
 
-
   return (
-    
     <div className="home-container">
+      {selectedPhoto && (
+        <div className="back-to-gallery-container">
+          <button
+            className="back-to-gallery-button"
+            onClick={() => setSelectedPhoto(null)}
+          >
+            Back To Gallery
+          </button>{" "}
+          <PhotoDetails item={selectedPhoto} />
+        </div>
+      )}
 
-{selectedPhoto && ( <div className='back-to-gallery-container'>
-  <button className='back-to-gallery-button' onClick={()=>setSelectedPhoto(null)}>Back To Gallery</button > <PhotoDetails item={selectedPhoto}/>
-  </div>)}
-
-
-      {(photos.length > 0 && !selectedPhoto) && (
+      {photos.length > 0 && !selectedPhoto && (
         <div>
-          <label>search for photo's name or artist name</label>
+          <label className="home-page-label">Search for photo's name or artist name  </label>
+
           <input ref={inputRef} />
-          <button onClick={() => useInputValue(inputRef)}>START</button>
+          <button
+            onClick={() => useInputValue(inputRef)}
+            onMouseEnter={() => (document.body.style.cursor = "pointer")}
+            onMouseLeave={() => (document.body.style.cursor = "auto")}
+          >
+            Search
+          </button>
         </div>
       )}
 
@@ -73,28 +86,47 @@ export default function HomePage() {
         </div>
       )}
 
-      {(photos.length && !searchedPhotos.length && !selectedPhoto) && (
+      {photos.length && !searchedPhotos.length && !selectedPhoto && (
+        <>
+          <label className="home-page-label">Click on a photo to open it</label>
+          <div className="list-container">
+            {photos.map((photo) => {
+              return (
+                <div
+                  className="photo-container"
+                  key={photo._id}
+                  onClick={() => setSelectedPhoto(photo)}
+                >
+                  <Photo item={photo} alt={photo.name} />;
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {photos.length && searchedPhotos.length > 0 && !selectedPhoto && (
         <div className="list-container">
-          {photos.map((photo) => {
-            return <div className='photo-container' onClick={()=> setSelectedPhoto(photo)}>
-              <Photo item={photo} alt={photo.name} key={photo._id}/>;
-            </div>
-          })}
-        </div>
-      )}
-
-      {(photos.length && searchedPhotos.length > 0 && !selectedPhoto) && (
-
-<div className="list-container">
-          <button className='see-all-items' alt={'see all items'} onClick={()=>setSearchText(()=>setSearchedPhotos(()=>[]))}>See all items</button>
+          <button
+            className="see-all-items"
+            alt={"see all items"}
+            onClick={() => setSearchText(() => setSearchedPhotos(() => []))}
+          >
+            Back to Gallery
+          </button>
           {searchedPhotos.map((photo) => {
-            return <div className='photo-container' onClick={()=> setSelectedPhoto(photo)}>
-              <Photo item={photo} alt={photo.name} key={photo._id}/>;
+            return (
+              <div
+                className="photo-container"
+                key={photo._id}
+                onClick={() => setSelectedPhoto(photo)}
+              >
+                <Photo item={photo} alt={photo.name} />;
               </div>
+            );
           })}
         </div>
       )}
-
     </div>
   );
 }

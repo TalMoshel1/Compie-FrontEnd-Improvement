@@ -1,7 +1,5 @@
-import React from "react"
 import Chat from './Chat';
 import '../style.css'
-import { useState } from 'react';
 import catImage from '../utilities/cat.webp'
 
 const PhotoDetails = ({item}) => {
