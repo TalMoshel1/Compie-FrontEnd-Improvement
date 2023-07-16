@@ -7,28 +7,30 @@ function Chat({ comments, id }) {
   const inputRef = useRef();
   const [updatedComments, setUpdatedComments] = useState(comments);
 
+  const handleAddComment = useCallback((e) => {
+    e.preventDefault();
+    const commentText = inputRef.current.value;
+    if (commentText.trim() === "") {
+      return;
+    }
 
 
-  const handleAddComment = useCallback(
-    (e) => {
-      e.preventDefault();
-      const commentText = inputRef.current.value;
-      if (commentText.trim() === "") {
-        return; 
-      }
+    const newComment = { user: "User", comment: commentText };
+    const updatedComments = [...comments, newComment];
+    setNewComment("");
+    setUpdatedComments(updatedComments);
+    inputRef.current.scrollIntoView({ behavior: "smooth" });
 
-      const newComment = { user: "User", comment: commentText };
-      const updatedComments = [...comments, newComment];
-      setNewComment("");
-      setUpdatedComments(updatedComments);
-      inputRef.current.scrollIntoView({ behavior: "smooth" });
+    putCommentInObjectDb(id, "User", commentText);
 
-      putCommentInObjectDb(id, "User", commentText);
+    socket.emit("add_comment", newComment);
+  }, [comments, id]);
 
-      socket.emit("add_comment", newComment);
-    },
-    [comments, id]
-  );
+  const handleAddCommentRef = useRef(handleAddComment);
+
+  useEffect(() => {
+    handleAddCommentRef.current = handleAddComment;
+  }, [handleAddComment]);
 
   function putCommentInObjectDb(_id, user, comment) {
     axios
@@ -38,18 +40,16 @@ function Chat({ comments, id }) {
         user: user,
       })
       .catch((error) => {
-        console.error("Error updating photo:", error);
+        return 
       });
   }
-
-
 
   useEffect(() => {
     socket.on("receive_comment", (postObj) => {
       setUpdatedComments((prevComments) => {
         const user = postObj.newComment.user;
         const comment = postObj.newComment.comment;
-        return [ ...prevComments, {user: user, comment: comment}];
+        return [...prevComments, { user: user, comment: comment }];
       });
     });
   }, []);
@@ -59,12 +59,12 @@ function Chat({ comments, id }) {
       {updatedComments.length > 0 &&
         updatedComments.map((comment, index) => (
           <div key={index} className="comment">
-            <span className="user">    {comment.user}:</span>
-            <span className="text">    {comment.comment}</span>
+            <span className="user"> {comment.user}:</span>
+            <span className="text"> {comment.comment}</span>
           </div>
         ))}
 
-      <form className="add-comment" onSubmit={handleAddComment}>
+      <form className="add-comment">
         <input
           type="text"
           ref={inputRef}
@@ -72,7 +72,9 @@ function Chat({ comments, id }) {
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Add a comment..."
         />
-        <button type="submit">Add</button>
+        <button type="submit" onClick={handleAddCommentRef.current}>
+          Add
+        </button>
       </form>
     </div>
   );

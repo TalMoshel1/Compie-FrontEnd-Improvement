@@ -10,6 +10,8 @@ function Photo({ item }) {
   return (
     <section
     className='photo'
+    onMouseEnter={() => (document.body.style.cursor = "pointer")}
+      onMouseLeave={() => (document.body.style.cursor = "auto")}
       onClick={() => setIsClicked(!isClicked)}
       key={item._id}
       style={{
@@ -30,6 +32,7 @@ function Photo({ item }) {
       <p className="item-name">{item.name}</p>
       <p className="item-artistName">{item.artistName}</p>
       <p className="item-describtion">{item.describtion}</p>
+
     </section>
   );
 }
