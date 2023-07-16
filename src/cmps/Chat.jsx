@@ -7,16 +7,14 @@ function Chat({ comments, id }) {
   const inputRef = useRef();
   const [updatedComments, setUpdatedComments] = useState(comments);
 
-  useEffect(()=>{
-    console.log(updatedComments)
-  },[updatedComments])
+
 
   const handleAddComment = useCallback(
     (e) => {
       e.preventDefault();
       const commentText = inputRef.current.value;
       if (commentText.trim() === "") {
-        return; // Prevent adding empty comments
+        return; 
       }
 
       const newComment = { user: "User", comment: commentText };
@@ -41,13 +39,10 @@ function Chat({ comments, id }) {
       })
       .catch((error) => {
         console.error("Error updating photo:", error);
-        // Handle error response here
       });
   }
 
-  useEffect(() => {
-    console.log(updatedComments);
-  }, [updatedComments]);
+
 
   useEffect(() => {
     socket.on("receive_comment", (postObj) => {
@@ -69,7 +64,6 @@ function Chat({ comments, id }) {
           </div>
         ))}
 
-      {/* Add comment form */}
       <form className="add-comment" onSubmit={handleAddComment}>
         <input
           type="text"

@@ -3,7 +3,7 @@ import '../style.css'
 function Header() {
   return (
     <header className='app-header'>
-      <h1 className='main-header'>Website Title</h1>
+      <h1 className='main-header'>Gallery</h1>
     </header>
   );
 };

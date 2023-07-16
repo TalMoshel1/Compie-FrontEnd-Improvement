@@ -31,7 +31,6 @@ export default function HomePage() {
   }
 
   function useInputValue(inputRef) {
-    console.log("function works!");
     if (photos.length > 0) {
       const filteredPhotos = photos.filter((photo) => {
         return (
@@ -55,9 +54,9 @@ export default function HomePage() {
     
     <div className="home-container">
 
-{selectedPhoto && ( <>
-  <button style={{border: '3px solid black'}} onClick={()=>setSelectedPhoto(null)}>Back To Gallery</button > <PhotoDetails item={selectedPhoto}/>
-  </>)}
+{selectedPhoto && ( <div className='back-to-gallery-container'>
+  <button className='back-to-gallery-button' onClick={()=>setSelectedPhoto(null)}>Back To Gallery</button > <PhotoDetails item={selectedPhoto}/>
+  </div>)}
 
 
       {(photos.length > 0 && !selectedPhoto) && (
@@ -75,9 +74,9 @@ export default function HomePage() {
       )}
 
       {(photos.length && !searchedPhotos.length && !selectedPhoto) && (
-        <div className="listContainer">
+        <div className="list-container">
           {photos.map((photo) => {
-            return <div onClick={()=> setSelectedPhoto(photo)}>
+            return <div className='photo-container' onClick={()=> setSelectedPhoto(photo)}>
               <Photo item={photo} alt={photo.name} key={photo._id}/>;
             </div>
           })}
@@ -86,30 +85,16 @@ export default function HomePage() {
 
       {(photos.length && searchedPhotos.length > 0 && !selectedPhoto) && (
 
-<div className="listContainer">
-          <button alt={'see all items'} onClick={()=>setSearchText(()=>setSearchedPhotos(()=>[]))}>See all items</button>
+<div className="list-container">
+          <button className='see-all-items' alt={'see all items'} onClick={()=>setSearchText(()=>setSearchedPhotos(()=>[]))}>See all items</button>
           {searchedPhotos.map((photo) => {
-            return <div  onClick={()=> setSelectedPhoto(photo)}>
+            return <div className='photo-container' onClick={()=> setSelectedPhoto(photo)}>
               <Photo item={photo} alt={photo.name} key={photo._id}/>;
               </div>
           })}
         </div>
       )}
 
-
-
-
-      {/* { {!photos || !photos.length ? (
-        <div className="loading">
-          <h2>Loading</h2>
-        </div>
-      ) : (
-        <div className="listContainer">
-          {photos.map((photo) => {
-            return <Photo item={photo} />;
-          })}
-        </div> */}
-      {/* )}  */}
     </div>
   );
 }

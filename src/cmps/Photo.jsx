@@ -9,6 +9,7 @@ function Photo({ item }) {
 
   return (
     <section
+    className='photo'
       onClick={() => setIsClicked(!isClicked)}
       key={item._id}
       style={{
@@ -17,8 +18,7 @@ function Photo({ item }) {
         alignItems: "center",
         border: "black solid 5px",
         margin: "5px",
-        minWidth: "303px",
-        width: "20%",
+        minWidth: "300px",
         flex: 1,
       }}
     >
